@@ -12,13 +12,13 @@ projects.put("/", (req, res) => {
 		//mongoose.disconnect();
 		if (err) {
 			res.status(500).end();
-			return console.log(err);
+			return console.error(err);
 		}
 		//res.status(201).send(project._id);
 		Project.aggregate([{ $project: { _id: 1, name: 1, wd: { $size: "$wd" } } }], (err, doc) => {
 			if (err) {
 				res.status(500).end();
-				return console.log(err);
+				return console.error(err);
 			}
 			res.status(201).send({ id: project._id, projects: doc });
 		});
@@ -30,24 +30,23 @@ projects.post("/", (req, res) => {
 	Project.aggregate([{ $project: { _id: 1, name: 1, wd: { $size: "$wd" } } }], (err, doc) => {
 		if (err) {
 			res.status(500).end();
-			return console.log(err);
+			return console.error(err);
 		}
 		res.status(200).send(doc);
 	});
 });
 // удалить прект
 projects.delete("/", (req, res) => {
-	console.log("req.body.data:", req.body.data.removeId);
 	const removeId = req.body.data.removeId;
 	Project.deleteOne({ _id: removeId }).exec(function (err, doc) {
 		if (err) {
 			res.status(500).end();
-			return console.log(err);
+			return console.error(err);
 		}
 		Project.aggregate([{ $project: { _id: 1, name: 1, wd: { $size: "$wd" } } }], (err, doc) => {
 			if (err) {
 				res.status(500).end();
-				return console.log(err);
+				return console.error(err);
 			}
 			res.status(200).send(doc);
 		});
